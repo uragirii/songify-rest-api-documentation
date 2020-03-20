@@ -1,0 +1,1427 @@
+---
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Songify
+  description: A sample API for a song streaming sevice which provides song details
+    and album details
+  termsOfService: http://example.com/terms
+  contact:
+    name: Songify API team
+    email: apiteam@songify.com
+    url: http://example.com/api/help
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://virtserver.swaggerhub.com/uragirii/Songify/1.0.1
+  description: SwaggerHub Auto Mock API
+- url: http://api.songify.com/v1
+  description: The version 1 endpoint for songify API
+- url: http://api2.songify.com/v1
+  description: Use this server only if the original server fails
+paths:
+  "/albums":
+    get:
+      description: Get multiple artists
+      operationId: getMultipleAlbums
+      parameters:
+      - name: ids
+        in: query
+        description: Comma-seperated list of IDs
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: market
+        description: The market (an ISO 3166-1 alpha-2 country code)
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: maximum number of results to return
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/album"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/albums/{id}":
+    get:
+      description: returns album data
+      operationId: getSpecificAlbum
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique album ID of the album
+        schema:
+          type: string
+      - name: market
+        description: The market (an ISO 3166-1 alpha-2 country code)
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: maximum number of results to return
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/album"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/albums/{id}/tracks":
+    get:
+      description: Returns all tracks of album
+      operationId: getTracksOfAlbum
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique album ID of the album
+        schema:
+          type: string
+      - name: market
+        description: The market (an ISO 3166-1 alpha-2 country code)
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/track-simple-page"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/artists":
+    get:
+      description: Get multiple artists
+      operationId: getMultipleArtists
+      parameters:
+      - name: ids
+        in: query
+        description: Comma-seperated list of IDs
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: limit
+        in: query
+        description: maximum number of results to return
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/artist"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/artists/{id}":
+    get:
+      description: Get details of an artist
+      operationId: getSpecificArtist
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique artist ID of the artist
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/artist"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/artists/{id}/albums":
+    get:
+      description: Get all the albums of specific artist
+      operationId: getAlbumsOfArtist
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique artist ID of the artist
+        schema:
+          type: string
+      - name: market
+        description: The market (an ISO 3166-1 alpha-2 country code)
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/album-simple-page"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/me":
+    get:
+      description: Get current user profile. Requires authentication
+      operationId: getUserProfile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/current-user-profile"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/me/following":
+    delete:
+      description: Unfollow artists or users
+      operationId: deleteUserFollowing
+      parameters:
+      - description: A comma seperated list of the artists or users to unfollow
+        in: query
+        name: ids
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '204':
+          description: No content
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    get:
+      description: Get user's followed artists
+      operationId: getUserFollowing
+      parameters:
+      - description: The maximum number of items to return
+        name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/followers"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    put:
+      description: Follow artists
+      operationId: followNewArtist
+      parameters:
+      - description: Comma seperated list of the artists or users to follow
+        in: query
+        name: ids
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '204':
+          description: No content
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/me/tracks":
+    delete:
+      description: Remove tracks for current user
+      operationId: deleteTracksOfUser
+      parameters:
+      - description: A comma seperated list of IDs of tracks that need to be deleted
+          for current user
+        in: query
+        name: ids
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    get:
+      description: Get tracks of user
+      operationId: getAllTracksOfUser
+      parameters:
+      - description: The maximum items to return
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/track"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    post:
+      description: Upload track of user
+      operationId: uploadTrackOfUser
+      parameters:
+      - description: The name of the track
+        in: query
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Album Id of the track
+        in: query
+        name: albumID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          audio/mpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/track"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/search":
+    get:
+      description: Search an item
+      parameters:
+      - description: The search query keyword
+        in: query
+        name: q
+        required: true
+        schema:
+          type: string
+      - description: The maximum number of items to send
+        name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - description: The market (an ISO 3166-1 alpha-2 country code).  If given, only
+          items with content playable in that market will be returned.
+        in: query
+        name: market
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/search"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/playlists":
+    get:
+      description: Get multiple playlists
+      operationId: getMultipleplaylists
+      parameters:
+      - name: ids
+        in: query
+        description: Comma-seperated list of IDs
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: limit
+        in: query
+        description: maximum number of results to return
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/playlist-simple-page"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/playlists/{id}":
+    get:
+      description: returns playlist data
+      operationId: getSpecificPlaylist
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique playlist ID of the playlist
+        schema:
+          type: string
+      - name: market
+        description: The market (an ISO 3166-1 alpha-2 country code)
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/playlist"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/playlists/{id}/tracks":
+    get:
+      description: Returns all tracks of playlist
+      operationId: getTracksOfPlaylist
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Unique playlist ID of the playlist
+        schema:
+          type: string
+      - name: market
+        description: The market (an ISO 3166-1 alpha-2 country code)
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/playlist-track"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/me/playlists":
+    get:
+      description: Get a list of user's playlists
+      operationId: getAllPlaylistOfUser
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/playlist-simple-page"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    post:
+      description: Create a new playlist with given track IDs
+      parameters:
+      - description: Comma seperated list of all the tracks to be added in the playlist
+        in: query
+        name: ids
+        required: true
+        schema:
+          type: string
+      - description: Playlist name
+        in: query
+        name: playlistName
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/playlist"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        '429':
+          description: API rate limit exceeded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ratelimit"
+          headers:
+            X-Rate-Limit-Limit:
+              schema:
+                "$ref": "#/components/headers/Limit"
+            X-Rate-Limit-Remaining:
+              schema:
+                "$ref": "#/components/headers/Remaining"
+            X-Rate-Limit-Reset:
+              schema:
+                "$ref": "#/components/headers/Reset"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+components:
+  schemas:
+    album:
+      type: object
+      properties:
+        artists:
+          description: The artists of the album. Each artist object includes links
+            for individual artist
+          type: array
+          items:
+            "$ref": "#/components/schemas/artist"
+        available_markets:
+          description: The markets in which the album is available. ISO 3166-1 alpha-2
+            country codes
+          type: array
+          items:
+            type: string
+        copyrights:
+          description: The copyright statements of the album
+          type: array
+          items:
+            type: string
+        external_urls:
+          description: Any external URLs
+          type: string
+        genres:
+          description: A list of genres used to classify the album
+          type: array
+          items:
+            type: string
+        href:
+          description: A link to API endpoint providing full details of the album
+          type: string
+        id:
+          description: A unique ID to identify this album
+          type: string
+        images:
+          description: The cover art of the album in various sizes. In some cases
+            there may be many cover arts for single album
+          type: array
+          items:
+            "$ref": "#/components/schemas/image"
+        name:
+          description: The name of the album
+          type: string
+        popularity:
+          description: The popularity of the album. Popularity is measured on a scale
+            of 0-100
+          type: integer
+        release_date:
+          description: The release date of the album in ISO date format
+          type: string
+        tracks:
+          description: All the tracks in the album
+          type: array
+          items:
+            "$ref": "#/components/schemas/track-simple-page"
+    album-simple-page:
+      type: object
+      properties:
+        href:
+          description: A link to API to return complete details of the Album
+          type: string
+        available_markets:
+          description: The markets in which the album is available. ISO 3166-1 alpha-2
+            country codes
+          type: array
+          items:
+            type: string
+        external_urls:
+          description: Any external URLs
+          type: string
+        id:
+          description: A unique ID to identify this album
+          type: string
+        images:
+          description: The cover art of the album in various sizes. In some cases
+            there may be many cover arts for single album
+          type: array
+          items:
+            "$ref": "#/components/schemas/image"
+        name:
+          description: The name of the album
+          type: string
+        release_date:
+          description: The release date of the album in ISO date format
+          type: string
+    artist:
+      type: object
+      properties:
+        external_urls:
+          description: External URLs of the artist
+          type: string
+        followers:
+          type: object
+          items:
+            "$ref": "#/components/schemas/followers"
+        href:
+          description: A link to Web API endpoint providing full details of artist
+          type: string
+        id:
+          description: A unique ID associated with artist
+          type: string
+        images:
+          description: Images of artist in various sizes
+          type: array
+          items:
+            "$ref": "#/components/schemas/image"
+        name:
+          description: Name of the artist
+          type: string
+        popularity:
+          description: The popularity of artist on 0-100 scale
+          type: integer
+    current-user-profile:
+      type: object
+      properties:
+        birthdate:
+          description: The uses's date of birth in ISO date format
+          type: string
+        country:
+          description: The country of user. Useful for displaying only country-specific
+            searches
+          type: string
+        displayName:
+          description: The display name on use's profile
+          type: string
+        email:
+          description: The email address of the user
+          type: string
+        external_urls:
+          description: Any external urls associated with the user
+          type: string
+        followers:
+          "$ref": "#/components/schemas/followers"
+        href:
+          description: The Web API endpoint to get all the details of the user
+          type: string
+        id:
+          description: The unique ID of user
+          type: string
+        isArtist:
+          description: If the user is an artist. User is considered an artist if he/she
+            has uploaded any songs
+          type: boolean
+    Error:
+      description: The description of erro occured while occured during request
+      type: string
+    followers:
+      type: object
+      properties:
+        total:
+          description: The total number of followers
+          type: integer
+        external_urls:
+          description: Any external urls associated with followers
+          type: string
+    image:
+      type: object
+      properties:
+        height:
+          description: The height of image in pixels
+          type: integer
+        width:
+          description: the width of image in pixels
+          type: integer
+        href:
+          description: The link of the image
+          type: string
+    playlist:
+      type: object
+      properties:
+        isOwner:
+          description: True is the current user is the owner of the playlist
+          type: boolean
+        description:
+          description: The description of the playlist
+          type: string
+        external_urls:
+          description: External urls associated with the playlist
+          type: string
+        followers:
+          "$ref": "#/components/schemas/followers"
+        href:
+          description: The Web API endpoint associated with endpoint
+          type: string
+        id:
+          description: The unique id of the playlist
+          type: string
+        name:
+          description: The name of the playlist
+          type: string
+        images:
+          description: The images of playlist
+          type: array
+          items:
+            "$ref": "#/components/schemas/image"
+        public:
+          description: If the playlist is public
+          type: boolean
+        tracks:
+          "$ref": "#/components/schemas/playlist-track"
+    playlist-simple-page:
+      type: object
+      properties:
+        isOwner:
+          description: True is the current user is the owner of the playlist
+          type: boolean
+        external_urls:
+          description: External urls associated with the playlist
+          type: string
+        href:
+          description: The Web API endpoint associated with endpoint
+          type: string
+        id:
+          description: The unique id of the playlist
+          type: string
+        name:
+          description: The name of the playlist
+          type: string
+        images:
+          description: The images of playlist
+          type: array
+          items:
+            "$ref": "#/components/schemas/image"
+        public:
+          description: If the playlist is public
+          type: boolean
+    playlist-track:
+      type: object
+      properties:
+        href:
+          description: The web API endpoint returning the details of the playlist
+          type: string
+        total:
+          description: The total number of tracks in the playlist
+          type: integer
+        tracks:
+          description: The tracks in the playlist
+          type: array
+          items:
+            "$ref": "#/components/schemas/track"
+    search:
+      type: object
+      properties:
+        albums:
+          description: The search results corresponding to albums
+          type: array
+          items:
+            "$ref": "#/components/schemas/album-simple-page"
+        artists:
+          description: The search results corresponding to artists
+          type: array
+          items:
+            "$ref": "#/components/schemas/artist"
+        tracks:
+          description: The search results corresponding to tracks
+          type: array
+          items:
+            "$ref": "#/components/schemas/track-simple-page"
+        playlist:
+          description: The search results corresponding to playlists
+          type: array
+          items:
+            "$ref": "#/components/schemas/playlist-simple-page"
+    track:
+      type: object
+      properties:
+        album:
+          "$ref": "#/components/schemas/album-simple-page"
+        artists:
+          description: The artists who performed the track
+          type: array
+          items:
+            "$ref": "#/components/schemas/artist"
+        available_markets:
+          description: A list of countries in which track is available
+          type: array
+          items:
+            type: string
+        duration_ms:
+          description: The duration of track in ms
+          type: integer
+        explicit:
+          description: If the track is explicit
+          type: boolean
+        external_urls:
+          description: External URLs associated with the track
+          type: string
+        id:
+          description: The id of the track
+          type: string
+        href:
+          description: The web API endpoint to get all the details of the track
+          type: string
+        name:
+          description: The name of the track
+          type: string
+        track_number:
+          description: The track number in the album
+          type: integer
+    track-simple-page:
+      type: object
+      properties:
+        artists:
+          description: The artists who performed the track
+          type: array
+          items:
+            "$ref": "#/components/schemas/artist"
+        available_markets:
+          description: A list of countries in which track is available
+          type: array
+          items:
+            type: string
+        duration_ms:
+          description: The duration of track in ms
+          type: integer
+        explicit:
+          description: If the track is explicit
+          type: boolean
+        external_urls:
+          description: External URLs associated with the track
+          type: string
+        id:
+          description: The id of the track
+          type: string
+        href:
+          description: The web API endpoint to get all the details of the track
+          type: string
+        name:
+          description: The name of the track
+          type: string
+        track_number:
+          description: The track number in the album
+          type: integer
+    ratelimit:
+      description: The message to be displayed when rate limit of API has excedded
+      type: object
+      properties:
+        message:
+          description: Rate Limit exceeded message
+          type: string
+        time_to_wait:
+          description: The seconds to be wait before next request
+          type: integer
+  securitySchemes:
+    APIAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  headers:
+    Limit:
+      description: The number of allowed requests in the current period
+      schema:
+        type: integer
+    Remaining:
+      description: The number of remaining requests in the current period
+      schema:
+        type: integer
+    Reset:
+      description: The number of seconds left in the current period
+      schema:
+        type: integer
+security:
+  APIAuth: []
