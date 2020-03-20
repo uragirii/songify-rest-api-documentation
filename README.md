@@ -1,5 +1,5 @@
 # Songify REST API
-This API works as a backend for the musixc streaming service Songify. The API allows anyone to get information and metadata about artists, albums, playlists and tracks.
+This API works as a backend for the music streaming service Songify. The API allows anyone to get information and metadata about artists, albums, playlists and tracks.
 
 The user must first obtain an API Key. An account is required for creating the API Key. You can get API Key for your account by visiting Developer Section of you account page.
 
